@@ -34,10 +34,12 @@ os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = USED_DEVICES
 
 FLAGS = flags.FLAGS
+# flags.DEFINE_bool("training", False, "Whether to train agents.")
 flags.DEFINE_bool("training", True, "Whether to train agents.")
 flags.DEFINE_integer("num_for_update", 1000, "Number of episodes for each train.")
 flags.DEFINE_string("log_path", "./logs/", "Path for log.")
-flags.DEFINE_string("device", "0,1,2,3", "Device for training.")
+# flags.DEFINE_string("device", "0,1,2,3", "Device for training.")
+flags.DEFINE_string("device", "0", "Device for training.")
 
 flags.DEFINE_string("map", "Simple64", "Name of a map to use.")
 flags.DEFINE_bool("render", False, "Whether to render with pygame.")
@@ -47,7 +49,8 @@ flags.DEFINE_integer("step_mul", 1, "Game steps per agent step.")
 
 flags.DEFINE_enum("agent_race", "P", sc2_env.races.keys(), "Agent's race.")
 flags.DEFINE_enum("bot_race", "T", sc2_env.races.keys(), "Bot's race.")
-flags.DEFINE_enum("difficulty", "A", sc2_env.difficulties.keys(), "Bot's strength.")
+# flags.DEFINE_enum("difficulty", "A", sc2_env.difficulties.keys(), "Bot's strength.")
+flags.DEFINE_enum("difficulty", "5", sc2_env.difficulties.keys(), "Bot's strength.")
 flags.DEFINE_integer("max_agent_steps", 18000, "Total agent steps.")
 flags.DEFINE_integer("max_iters", 100, "the rl agent max run iters")
 
@@ -56,11 +59,15 @@ flags.DEFINE_bool("trace", False, "Whether to trace the code execution.")
 flags.DEFINE_bool("save_replay", False, "Whether to replays_save a replay at the end.")
 flags.DEFINE_string("replay_dir", "multi-agent/", "dir of replay to replays_save.")
 
-flags.DEFINE_string("restore_model_path", "./model/20211130-131356/", "path for restore model")
+# flags.DEFINE_string("restore_model_path", "./model/20211130-131356/", "path for restore model")
+flags.DEFINE_string("restore_model_path", "./model/lv10-0.94/", "path for restore model")
 flags.DEFINE_bool("restore_model", False, "Whether to restore old model")
+# flags.DEFINE_bool("restore_model", True, "Whether to restore old model")
 
-flags.DEFINE_integer("parallel", 10, "How many processes to run in parallel.")
-flags.DEFINE_integer("thread_num", 5, "How many thread to run in the process.")
+# flags.DEFINE_integer("parallel", 10, "How many processes to run in parallel.")
+flags.DEFINE_integer("parallel", 1, "How many processes to run in parallel.")
+# flags.DEFINE_integer("thread_num", 5, "How many thread to run in the process.")
+flags.DEFINE_integer("thread_num", 1, "How many thread to run in the process.")
 flags.DEFINE_integer("port_num", 6370, "the start port to create distribute tf")
 #flags.DEFINE_integer("port_num", 6470, "the start port to create distribute tf")
 
@@ -72,8 +79,8 @@ if FLAGS.training:
     PARALLEL = FLAGS.parallel
     THREAD_NUM = FLAGS.thread_num
     MAX_AGENT_STEPS = FLAGS.max_agent_steps
-    DEVICE = ['/gpu:' + dev for dev in FLAGS.device.split(',')]
-    #DEVICE = ['/cpu:0']
+    # DEVICE = ['/gpu:' + dev for dev in FLAGS.device.split(',')]
+    DEVICE = ['/cpu:0']
 else:
     PARALLEL = 1
     THREAD_NUM = 1
@@ -98,14 +105,14 @@ Result_List = []
 
 
 ''' 
-ps -ef |grep liuruoze | awk '{print $2}' | xargs kill -9
-ps -ef |grep liuruoze | grep main.py | awk '{print $2}' | xargs kill -9
-ps -ef |grep liuruoze | grep SC2 | awk '{print $2}' | xargs kill -9
+ps -ef |grep root | awk '{print $2}' | xargs kill -9
+ps -ef |grep root | grep main.py | awk '{print $2}' | xargs kill -9
+ps -ef |grep root | grep SC2 | awk '{print $2}' | xargs kill -9
 '''
 
 ''' 
-ps -ef |grep liuruoze | grep 'SC2_x64' | awk '{print $2}' | xargs kill -9
-kill -9 `ps -ef |grep liuruoze | grep main | awk '{print $2}' `
+ps -ef |grep root | grep 'SC2_x64' | awk '{print $2}' | xargs kill -9
+kill -9 `ps -ef |grep root | grep main | awk '{print $2}' `
 
 '''
 
