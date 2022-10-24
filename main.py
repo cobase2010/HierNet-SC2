@@ -28,8 +28,8 @@ from logging import warning as logging
 
 import server_param as SP
 
-#USED_DEVICES = "0,1,2,3"
-USED_DEVICES = "4,5,6,7"
+USED_DEVICES = "0"
+# USED_DEVICES = "4,5,6,7"
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = USED_DEVICES
 
@@ -64,10 +64,10 @@ flags.DEFINE_string("restore_model_path", "./model/lv10-0.94/", "path for restor
 flags.DEFINE_bool("restore_model", False, "Whether to restore old model")
 # flags.DEFINE_bool("restore_model", True, "Whether to restore old model")
 
-# flags.DEFINE_integer("parallel", 10, "How many processes to run in parallel.")
-flags.DEFINE_integer("parallel", 1, "How many processes to run in parallel.")
-# flags.DEFINE_integer("thread_num", 5, "How many thread to run in the process.")
-flags.DEFINE_integer("thread_num", 1, "How many thread to run in the process.")
+flags.DEFINE_integer("parallel", 2, "How many processes to run in parallel.")
+# flags.DEFINE_integer("parallel", 1, "How many processes to run in parallel.")
+flags.DEFINE_integer("thread_num", 2, "How many thread to run in the process.")
+# flags.DEFINE_integer("thread_num", 1, "How many thread to run in the process.")
 flags.DEFINE_integer("port_num", 6370, "the start port to create distribute tf")
 #flags.DEFINE_integer("port_num", 6470, "the start port to create distribute tf")
 
@@ -79,8 +79,8 @@ if FLAGS.training:
     PARALLEL = FLAGS.parallel
     THREAD_NUM = FLAGS.thread_num
     MAX_AGENT_STEPS = FLAGS.max_agent_steps
-    # DEVICE = ['/gpu:' + dev for dev in FLAGS.device.split(',')]
-    DEVICE = ['/cpu:0']
+    DEVICE = ['/gpu:' + dev for dev in FLAGS.device.split(',')]
+    # DEVICE = ['/cpu:0']
 else:
     PARALLEL = 1
     THREAD_NUM = 1
@@ -105,7 +105,7 @@ Result_List = []
 
 
 ''' 
-ps -ef |grep root | awk '{print $2}' | xargs kill -9
+ps -ef |grep mark | awk '{print $2}' | xargs kill -9
 ps -ef |grep root | grep main.py | awk '{print $2}' | xargs kill -9
 ps -ef |grep root | grep SC2 | awk '{print $2}' | xargs kill -9
 '''
