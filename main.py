@@ -36,7 +36,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = USED_DEVICES
 FLAGS = flags.FLAGS
 # flags.DEFINE_bool("training", False, "Whether to train agents.")
 flags.DEFINE_bool("training", True, "Whether to train agents.")
-flags.DEFINE_integer("num_for_update", 1000, "Number of episodes for each train.")
+flags.DEFINE_integer("num_for_update", 190, "Number of episodes for each train.")
 flags.DEFINE_string("log_path", "./logs/", "Path for log.")
 # flags.DEFINE_string("device", "0,1,2,3", "Device for training.")
 flags.DEFINE_string("device", "0", "Device for training.")
@@ -54,19 +54,20 @@ flags.DEFINE_enum("difficulty", "5", sc2_env.difficulties.keys(), "Bot's strengt
 flags.DEFINE_integer("max_agent_steps", 18000, "Total agent steps.")
 flags.DEFINE_integer("max_iters", 100, "the rl agent max run iters")
 
-flags.DEFINE_bool("profile", False, "Whether to turn on code profiling.")
-flags.DEFINE_bool("trace", False, "Whether to trace the code execution.")
-flags.DEFINE_bool("save_replay", False, "Whether to replays_save a replay at the end.")
+flags.DEFINE_bool("profile", True, "Whether to turn on code profiling.")
+flags.DEFINE_bool("trace", True, "Whether to trace the code execution.")
+flags.DEFINE_bool("save_replay", True, "Whether to replays_save a replay at the end.")
 flags.DEFINE_string("replay_dir", "multi-agent/", "dir of replay to replays_save.")
 
 # flags.DEFINE_string("restore_model_path", "./model/20211130-131356/", "path for restore model")
-flags.DEFINE_string("restore_model_path", "./model/lv10-0.94/", "path for restore model")
-flags.DEFINE_bool("restore_model", False, "Whether to restore old model")
+# flags.DEFINE_string("restore_model_path", "./model/lv10-0.94/", "path for restore model")
+flags.DEFINE_string("restore_model_path", "./model/latest/", "path for restore model")
+flags.DEFINE_bool("restore_model", True, "Whether to restore old model")
 # flags.DEFINE_bool("restore_model", True, "Whether to restore old model")
 
-flags.DEFINE_integer("parallel", 2, "How many processes to run in parallel.")
+flags.DEFINE_integer("parallel", 1, "How many processes to run in parallel.")
 # flags.DEFINE_integer("parallel", 1, "How many processes to run in parallel.")
-flags.DEFINE_integer("thread_num", 2, "How many thread to run in the process.")
+flags.DEFINE_integer("thread_num", 1, "How many thread to run in the process.")
 # flags.DEFINE_integer("thread_num", 1, "How many thread to run in the process.")
 flags.DEFINE_integer("port_num", 6370, "the start port to create distribute tf")
 #flags.DEFINE_integer("port_num", 6470, "the start port to create distribute tf")
@@ -290,7 +291,7 @@ def Parameter_Server(Synchronizer, cluster, log_path):
         Synchronizer.wait()
         logging("Update Network!")
         # TODO count the time , compare cpu and gpu
-        time.sleep(1)
+        time.sleep(2)
 
         # update finish
         Synchronizer.wait()
@@ -298,6 +299,8 @@ def Parameter_Server(Synchronizer, cluster, log_path):
 
         steps, win_rate = agent.update_summary(update_counter)
         logging("Steps: %d, win rate: %f" % (steps, win_rate))
+        logging("Steps: %d, current max win rate: %f" % (steps, max_win_rate))
+
 
         update_counter += 1
         if win_rate >= max_win_rate:
