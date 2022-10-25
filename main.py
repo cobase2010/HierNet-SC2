@@ -36,7 +36,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = USED_DEVICES
 FLAGS = flags.FLAGS
 # flags.DEFINE_bool("training", False, "Whether to train agents.")
 flags.DEFINE_bool("training", True, "Whether to train agents.")
-flags.DEFINE_integer("num_for_update", 190, "Number of episodes for each train.")
+flags.DEFINE_integer("num_for_update", 100, "Number of episodes for each train.")
 flags.DEFINE_string("log_path", "./logs/", "Path for log.")
 # flags.DEFINE_string("device", "0,1,2,3", "Device for training.")
 flags.DEFINE_string("device", "0", "Device for training.")
@@ -52,11 +52,11 @@ flags.DEFINE_enum("bot_race", "T", sc2_env.races.keys(), "Bot's race.")
 # flags.DEFINE_enum("difficulty", "A", sc2_env.difficulties.keys(), "Bot's strength.")
 flags.DEFINE_enum("difficulty", "5", sc2_env.difficulties.keys(), "Bot's strength.")
 flags.DEFINE_integer("max_agent_steps", 18000, "Total agent steps.")
-flags.DEFINE_integer("max_iters", 100, "the rl agent max run iters")
+flags.DEFINE_integer("max_iters", 10, "the rl agent max run iters")
 
-flags.DEFINE_bool("profile", True, "Whether to turn on code profiling.")
-flags.DEFINE_bool("trace", True, "Whether to trace the code execution.")
-flags.DEFINE_bool("save_replay", True, "Whether to replays_save a replay at the end.")
+flags.DEFINE_bool("profile", False, "Whether to turn on code profiling.")
+flags.DEFINE_bool("trace", False, "Whether to trace the code execution.")
+flags.DEFINE_bool("save_replay", False, "Whether to replays_save a replay at the end.")
 flags.DEFINE_string("replay_dir", "multi-agent/", "dir of replay to replays_save.")
 
 # flags.DEFINE_string("restore_model_path", "./model/20211130-131356/", "path for restore model")
@@ -65,9 +65,9 @@ flags.DEFINE_string("restore_model_path", "./model/latest/", "path for restore m
 flags.DEFINE_bool("restore_model", True, "Whether to restore old model")
 # flags.DEFINE_bool("restore_model", True, "Whether to restore old model")
 
-flags.DEFINE_integer("parallel", 1, "How many processes to run in parallel.")
+flags.DEFINE_integer("parallel", 2, "How many processes to run in parallel.")
 # flags.DEFINE_integer("parallel", 1, "How many processes to run in parallel.")
-flags.DEFINE_integer("thread_num", 1, "How many thread to run in the process.")
+flags.DEFINE_integer("thread_num", 2, "How many thread to run in the process.")
 # flags.DEFINE_integer("thread_num", 1, "How many thread to run in the process.")
 flags.DEFINE_integer("port_num", 6370, "the start port to create distribute tf")
 #flags.DEFINE_integer("port_num", 6470, "the start port to create distribute tf")
@@ -120,9 +120,12 @@ kill -9 `ps -ef |grep root | grep main | awk '{print $2}' `
 
 def run_thread(agent, game_num, Synchronizer, difficulty):
     global UPDATE_EVENT, ROLLING_EVENT, Counter, Waiting_Counter, Update_Counter, Result_List
+    
 
     num = 0
     proc_name = mp.current_process().name
+
+    print("In proc:", proc_name, "Thread id:", threading.get_ident())
 
     C._FPS = 2.8
     step_mul = 8
@@ -170,14 +173,22 @@ def run_thread(agent, game_num, Synchronizer, difficulty):
             print("Environment has restarted.")
             agent.play()
 
+            
         if FLAGS.training:
             # check if the num of episodes is enough to update
             num += 1
             Counter += 1
             reward = agent.result['reward']
+            # frames = agent.result['frames']
+            episode_steps = env._episode_steps  
+
             Result_List.append(reward)
-            logging("(diff: %d) %d epoch: %s get %d/%d episodes! return: %d!" %
-                    (int(C.difficulty), Update_Counter, proc_name, len(Result_List), game_num * THREAD_NUM, reward))
+            logging("(diff: %d) %d epoch: %s:%d get %d/%d episodes with %d steps! return: %d!" %
+                    (int(C.difficulty), Update_Counter, proc_name, threading.get_ident(), len(Result_List), game_num * THREAD_NUM, episode_steps, reward))
+            if reward == 1:
+                # if we won, print more stats    
+                print("obs player_common\n:", agent.obs.raw_observation.observation.player_common)
+                # print("obs score\n", agent.obs.raw_observation.observation.score)
 
             # time for update
             if num == game_num:
@@ -252,12 +263,17 @@ def Worker(index, update_game_num, Synchronizer, cluster):
         t = threading.Thread(target=run_thread, args=(agents[i], game_num, Synchronizer, FLAGS.difficulty))
         threads.append(t)
         t.daemon = True
+        print("Starting a daemon thread for agent: ", i)
+        
         t.start()
+        
         time.sleep(3)
 
+    print("Running main thread for agent:", len(agents)-1)
     run_thread(agents[-1], game_num, Synchronizer, FLAGS.difficulty)
 
     for t in threads:
+        logging("In THREAD JOIN CODE!!!!!!!!!!!!!!!")
         t.join()
 
 
@@ -306,6 +322,12 @@ def Parameter_Server(Synchronizer, cluster, log_path):
         if win_rate >= max_win_rate:
             agent.save_model()
             max_win_rate = win_rate
+
+        remaining = Synchronizer.wait()
+        if remaining == 0:
+            print('I was last...')
+        else:
+            print("Still ", remaining, " process remaining.")
 
         latest_win_rate = win_rate
         # agent.net.save_latest_policy()
