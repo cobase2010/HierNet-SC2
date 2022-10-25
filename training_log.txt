@@ -1,0 +1,10 @@
+
+Protos vs Zerg
+Difficulty: 1
+100 episodes (1 iter): 98% win
+
+Difficulty: 2
+model: latest.3 (based on diff:1 model first)
+
+
+
