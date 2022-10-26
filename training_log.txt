@@ -7,9 +7,16 @@ Difficulty: 2
 model: latest.3 (based on diff:1 model first)
 Finished 2 epocs (200 games) before stuck. Best win rate 77%
 
-Restarting with only 1 process and 2 threads.
+Restarting with only 1 process and 2 threads. Added one more synchronizer to make sure all processes/threads start each epoch together. Also gracefully exit after max_iter.
 
+Still have bugs with multiple processes or machine killed it after running out of memory.
 
+Difficulty 3
+model: zerg_latest.3 (based on model trained from diff 2)
+Running 200 episodes for 10 iterations.
+epoch 0: 6% winning rate.
+epoch 1: 2.5% winning rate.
+epoch 2: 
 
 On macbook
 Proto vs Proto

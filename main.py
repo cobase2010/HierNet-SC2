@@ -36,7 +36,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = USED_DEVICES
 FLAGS = flags.FLAGS
 # flags.DEFINE_bool("training", False, "Whether to train agents.")
 flags.DEFINE_bool("training", True, "Whether to train agents.")
-flags.DEFINE_integer("num_for_update", 100, "Number of episodes for each train.")
+flags.DEFINE_integer("num_for_update", 200, "Number of episodes for each train.")
 flags.DEFINE_string("log_path", "./logs/", "Path for log.")
 # flags.DEFINE_string("device", "0,1,2,3", "Device for training.")
 flags.DEFINE_string("device", "0", "Device for training.")
@@ -50,7 +50,7 @@ flags.DEFINE_integer("step_mul", 1, "Game steps per agent step.")
 flags.DEFINE_enum("agent_race", "P", sc2_env.races.keys(), "Agent's race.")
 flags.DEFINE_enum("bot_race", "Z", sc2_env.races.keys(), "Bot's race.")
 # flags.DEFINE_enum("difficulty", "A", sc2_env.difficulties.keys(), "Bot's strength.")
-flags.DEFINE_enum("difficulty", "2", sc2_env.difficulties.keys(), "Bot's strength.")
+flags.DEFINE_enum("difficulty", "3", sc2_env.difficulties.keys(), "Bot's strength.")
 flags.DEFINE_integer("max_agent_steps", 18000, "Total agent steps.")
 flags.DEFINE_integer("max_iters", 10, "the rl agent max run iters")
 
@@ -61,7 +61,7 @@ flags.DEFINE_string("replay_dir", "multi-agent/", "dir of replay to replays_save
 
 # flags.DEFINE_string("restore_model_path", "./model/20211130-131356/", "path for restore model")
 # flags.DEFINE_string("restore_model_path", "./model/lv10-0.94/", "path for restore model")
-flags.DEFINE_string("restore_model_path", "./model/latest.2/", "path for restore model")
+flags.DEFINE_string("restore_model_path", "./model/zerg_latest.2/", "path for restore model")
 flags.DEFINE_bool("restore_model", True, "Whether to restore old model")
 # flags.DEFINE_bool("restore_model", True, "Whether to restore old model")
 
@@ -104,6 +104,8 @@ Waiting_Counter = 0
 Update_Counter = 0
 Result_List = []
 
+envs = []
+
 
 ''' 
 ps -ef |grep mark | awk '{print $2}' | xargs kill -9
@@ -121,7 +123,8 @@ kill -9 `ps -ef |grep root | grep main | awk '{print $2}' `
 def run_thread(agent, game_num, Synchronizer, difficulty):
     global UPDATE_EVENT, ROLLING_EVENT, Counter, Waiting_Counter, Update_Counter, Result_List
     
-
+    # update_counter = threading.local()
+    # update_counter.val = 0
     num = 0
     proc_name = mp.current_process().name
 
@@ -147,9 +150,12 @@ def run_thread(agent, game_num, Synchronizer, difficulty):
         minimap_size_px=(FLAGS.minimap_resolution, FLAGS.minimap_resolution),
         visualize=False,
         game_version=FLAGS.game_version)
+
+    # envs.append(env)
     # env = available_actions_printer.AvailableActionsPrinter(env)
     agent.set_env(env)
 
+    # while True and  Update_Counter < TRAIN_ITERS:
     while True:
         try:
             agent.play()
@@ -200,6 +206,9 @@ def run_thread(agent, game_num, Synchronizer, difficulty):
                     if Waiting_Counter == THREAD_NUM - 1:  # wait for all the workers stop
                         UPDATE_EVENT.set()
                     ROLLING_EVENT.wait()
+                    # Waiting for model saving to finish
+                    # print("Waiting for model saving in worker process:", proc_name, " thread:", threading.get_ident())
+                    # Synchronizer.wait()
 
                 # update!
                 else:
@@ -214,17 +223,33 @@ def run_thread(agent, game_num, Synchronizer, difficulty):
 
                     Synchronizer.wait()
 
-                    Update_Counter += 1
+                    # Waiting for model saving to finish
+                    print("Waiting for model saving in worker process:", proc_name, " thread:", threading.get_ident())
+                    Synchronizer.wait()
 
+                    Update_Counter += 1
+                    # update_counter.val += 1   #per thread local counter
                     # finish update
                     UPDATE_EVENT.clear()
                     Waiting_Counter = 0
                     ROLLING_EVENT.set()
 
+                   
+
+        # print("Update counter in worker process:", proc_name, " thread:", threading.get_ident(), "counter:", update_counter.val)
+        print("Update counter in worker process:", proc_name, " thread:", threading.get_ident(), "counter:", Update_Counter)
         if FLAGS.save_replay:
             env.save_replay(FLAGS.replay_dir)
 
         agent.reset()
+
+        if Update_Counter >= TRAIN_ITERS:
+            # We are done, exiting
+            break
+        
+
+    # clean up agent environment
+    env.close()
 
 
 def Worker(index, update_game_num, Synchronizer, cluster):
@@ -305,6 +330,7 @@ def Parameter_Server(Synchronizer, cluster, log_path):
 
         # wait for update
         Synchronizer.wait()
+
         logging("Update Network!")
         # TODO count the time , compare cpu and gpu
         time.sleep(2)
@@ -323,14 +349,14 @@ def Parameter_Server(Synchronizer, cluster, log_path):
             agent.save_model()
             max_win_rate = win_rate
 
-#        remaining = Synchronizer.wait()
-#        if remaining == 0:
-#            print('I was last...')
-#        else:
-#            print("Still ", remaining, " process remaining.")
+        print("P server waiting for other processes. current count:", update_counter)
+        # Make sure other processes wait till we've saved the model before doing next iter or exit.
+        Synchronizer.wait()
+        
 
         latest_win_rate = win_rate
         # agent.net.save_latest_policy()
+
 
     return max_win_rate, latest_win_rate
 
@@ -387,8 +413,15 @@ def _main(unused_argv):
     print('Latest Win_rate:', latest_win_rate)
     print('#######################')
 
+    # No need to join here as the other processes should exit themselves shortly before or after.
     for p in procs:
-        p.join()
+        if p.is_alive():
+            logging("Joining process.")
+            p.join()
+    
+    # for env in envs:
+    #     logging("Closing SC2 game env...")
+    #     env.close()
 
     if FLAGS.profile:
         print(stopwatch.sw)
