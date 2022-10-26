@@ -10,3 +10,9 @@ Finished 2 epocs (200 games) before stuck. Best win rate 77%
 Restarting with only 1 process and 2 threads.
 
 
+
+On macbook
+Proto vs Proto
+Difficulty: 2
+restarted training against protos using proto_latest.2 as starting model.
+
