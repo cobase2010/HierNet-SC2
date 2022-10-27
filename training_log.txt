@@ -18,6 +18,8 @@ epoch 0 (): 6% winning rate.
 epoch 1: 2.5% winning rate.
 epoch 2: 7.5
 epoch 3 (12:15): 
+23:28 Training finished with 10 whole iterations: max win rate: 26%.
+Full 2000 games took about 17 hours.
 
 On macbook
 Proto vs Proto
