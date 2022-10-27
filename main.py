@@ -69,9 +69,9 @@ flags.DEFINE_string("restore_model_path", "./model/terran_latest.3/", "path for 
 flags.DEFINE_bool("restore_model", True, "Whether to restore old model")
 # flags.DEFINE_bool("restore_model", True, "Whether to restore old model")
 
-flags.DEFINE_integer("parallel", 4, "How many processes to run in parallel.")
+flags.DEFINE_integer("parallel", 2, "How many processes to run in parallel.")
 # flags.DEFINE_integer("parallel", 1, "How many processes to run in parallel.")
-flags.DEFINE_integer("thread_num", 4, "How many thread to run in the process.")
+flags.DEFINE_integer("thread_num", 2, "How many thread to run in the process.")
 # flags.DEFINE_integer("thread_num", 1, "How many thread to run in the process.")
 flags.DEFINE_integer("port_num", 6370, "the start port to create distribute tf")
 #flags.DEFINE_integer("port_num", 6470, "the start port to create distribute tf")
