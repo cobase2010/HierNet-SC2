@@ -21,6 +21,10 @@ epoch 3 (12:15):
 23:28 Training finished with 10 whole iterations: max win rate: 26%.
 Full 2000 games took about 17 hours.
 
+tensorflow gpu error after 5 iterations, had to restart.
+
+
+
 On macbook
 Proto vs Proto
 Difficulty: 2
