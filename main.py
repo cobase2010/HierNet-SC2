@@ -65,7 +65,7 @@ flags.DEFINE_string("replay_dir", "multi-agent/", "dir of replay to replays_save
 # flags.DEFINE_string("restore_model_path", "./model/20211130-131356/", "path for restore model")
 # flags.DEFINE_string("restore_model_path", "./model/lv10-0.94/", "path for restore model")
 # flags.DEFINE_string("restore_model_path", "./model/zerg_latest.2/", "path for restore model")
-flags.DEFINE_string("restore_model_path", "./model/terrab_latest.3/", "path for restore model")
+flags.DEFINE_string("restore_model_path", "./model/terran_latest.3/", "path for restore model")
 flags.DEFINE_bool("restore_model", True, "Whether to restore old model")
 # flags.DEFINE_bool("restore_model", True, "Whether to restore old model")
 
