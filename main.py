@@ -25,8 +25,10 @@ from datetime import datetime
 import multiprocessing as mp
 import numpy as np
 from logging import warning as logging
+import logging as result_log
 
 import server_param as SP
+
 
 USED_DEVICES = "0"
 # USED_DEVICES = "4,5,6,7"
@@ -48,7 +50,8 @@ flags.DEFINE_integer("minimap_resolution", 64, "Resolution for minimap feature l
 flags.DEFINE_integer("step_mul", 1, "Game steps per agent step.")
 
 flags.DEFINE_enum("agent_race", "P", sc2_env.races.keys(), "Agent's race.")
-flags.DEFINE_enum("bot_race", "Z", sc2_env.races.keys(), "Bot's race.")
+# flags.DEFINE_enum("bot_race", "Z", sc2_env.races.keys(), "Bot's race.")
+flags.DEFINE_enum("bot_race", "P", sc2_env.races.keys(), "Bot's race.")
 # flags.DEFINE_enum("difficulty", "A", sc2_env.difficulties.keys(), "Bot's strength.")
 flags.DEFINE_enum("difficulty", "3", sc2_env.difficulties.keys(), "Bot's strength.")
 flags.DEFINE_integer("max_agent_steps", 18000, "Total agent steps.")
@@ -61,11 +64,12 @@ flags.DEFINE_string("replay_dir", "multi-agent/", "dir of replay to replays_save
 
 # flags.DEFINE_string("restore_model_path", "./model/20211130-131356/", "path for restore model")
 # flags.DEFINE_string("restore_model_path", "./model/lv10-0.94/", "path for restore model")
-flags.DEFINE_string("restore_model_path", "./model/zerg_latest.2/", "path for restore model")
+# flags.DEFINE_string("restore_model_path", "./model/zerg_latest.2/", "path for restore model")
+flags.DEFINE_string("restore_model_path", "./model/proto_latest.3/", "path for restore model")
 flags.DEFINE_bool("restore_model", True, "Whether to restore old model")
 # flags.DEFINE_bool("restore_model", True, "Whether to restore old model")
 
-flags.DEFINE_integer("parallel", 1, "How many processes to run in parallel.")
+flags.DEFINE_integer("parallel", 2, "How many processes to run in parallel.")
 # flags.DEFINE_integer("parallel", 1, "How many processes to run in parallel.")
 flags.DEFINE_integer("thread_num", 2, "How many thread to run in the process.")
 # flags.DEFINE_integer("thread_num", 1, "How many thread to run in the process.")
@@ -96,6 +100,8 @@ if not os.path.exists(LOG):
     os.makedirs(LOG)
 
 SERVER_DICT = {"worker": [], "ps": []}
+
+result_log.basicConfig(filename="results.log", level=result_log.INFO)
 
 # define some global variable
 UPDATE_EVENT, ROLLING_EVENT = threading.Event(), threading.Event()
@@ -343,7 +349,10 @@ def Parameter_Server(Synchronizer, cluster, log_path):
         logging("Steps: %d, win rate: %f" % (steps, win_rate))
         logging("Steps: %d, current max win rate: %f" % (steps, max_win_rate))
 
-
+        time_str = str(datetime.now())
+        result_log.info("%s: Steps: %d, win rate: %f" % (time_str, steps, win_rate))
+        result_log.info("%s: Steps: %d, current max win rate: %f" % (time_str, steps, max_win_rate))
+        
         update_counter += 1
         if win_rate >= max_win_rate:
             agent.save_model()
