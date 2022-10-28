@@ -50,8 +50,8 @@ flags.DEFINE_integer("minimap_resolution", 64, "Resolution for minimap feature l
 flags.DEFINE_integer("step_mul", 1, "Game steps per agent step.")
 
 flags.DEFINE_enum("agent_race", "P", sc2_env.races.keys(), "Agent's race.")
-# flags.DEFINE_enum("bot_race", "T", sc2_env.races.keys(), "Bot's race.")
-flags.DEFINE_enum("bot_race", "Z", sc2_env.races.keys(), "Bot's race.")
+flags.DEFINE_enum("bot_race", "T", sc2_env.races.keys(), "Bot's race.")
+# flags.DEFINE_enum("bot_race", "Z", sc2_env.races.keys(), "Bot's race.")
 # flags.DEFINE_enum("bot_race", "P", sc2_env.races.keys(), "Bot's race.")
 # flags.DEFINE_enum("difficulty", "A", sc2_env.difficulties.keys(), "Bot's strength.")
 flags.DEFINE_enum("difficulty", "3", sc2_env.difficulties.keys(), "Bot's strength.")
@@ -65,8 +65,8 @@ flags.DEFINE_string("replay_dir", "multi-agent/", "dir of replay to replays_save
 
 # flags.DEFINE_string("restore_model_path", "./model/20211130-131356/", "path for restore model")
 # flags.DEFINE_string("restore_model_path", "./model/lv10-0.94/", "path for restore model")
-flags.DEFINE_string("restore_model_path", "./model/zerg_latest.3/", "path for restore model")
-# flags.DEFINE_string("restore_model_path", "./model/terran_latest.3/", "path for restore model")
+# flags.DEFINE_string("restore_model_path", "./model/zerg_latest.3/", "path for restore model")
+flags.DEFINE_string("restore_model_path", "./model/terran_latest.3/", "path for restore model")
 flags.DEFINE_bool("restore_model", True, "Whether to restore old model")
 # flags.DEFINE_bool("restore_model", True, "Whether to restore old model")
 
