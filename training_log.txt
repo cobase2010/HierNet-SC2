@@ -22,6 +22,17 @@ epoch 3 (12:15):
 Full 2000 games took about 17 hours.
 
 tensorflow gpu error after 5 iterations, had to restart.
+restart at 10/27/2022 3:00 am
+Finished 10 iterations of 200 games at 10/27/2022 8:20 PM.
+Best win rate: 49%
+
+Started another run at 10/27/2022 8:30 PM
+10 iterations of 200 games with 1 proc, 2 threads on surface book 2
+using zerg_latest.3 model from previous run.
+
+
+
+
 
 
 
@@ -41,7 +52,8 @@ Using proto_latest.3 as starting model.
 epoch 0:
 epoch 1:
 
-
-2/100 on mackbook
-55/200 on pc
+Protos vs Terran
+Started a run with 5 iterations of 200 games on Kaggle server at 10/27/2022 11:00 am
+A previous run was killed after 12 hours.
+Using terran_latest.3 as the starting model.
 
