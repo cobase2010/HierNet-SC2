@@ -29,6 +29,14 @@ Best win rate: 49%
 Started another run at 10/27/2022 8:30 PM
 10 iterations of 200 games with 1 proc, 2 threads on surface book 2
 using zerg_latest.3 model from previous run.
+epoch 0: 44%
+epoch 1: 19%
+epoch 3: 45
+finished 5 iteratioms at 5:28 AM. 
+Besg win rate: 45%
+
+Started another run at 10/28/2022 6:22 am
+10 iterations of 200 games with 1 proc, 2 threads on surface book 2
 
 
 
@@ -49,8 +57,7 @@ epoch 1:
 
 102622-20:15: started a new run with 200 episodes for 20 iterations: running 1 proc, 2 threads.
 Using proto_latest.3 as starting model.
-epoch 0:
-epoch 1:
+
 
 Protos vs Terran
 Started a run with 5 iterations of 200 games on Kaggle server at 10/27/2022 11:00 am
