@@ -56,4 +56,8 @@ Protos vs Terran
 Started a run with 5 iterations of 200 games on Kaggle server at 10/27/2022 11:00 am
 A previous run was killed after 12 hours.
 Using terran_latest.3 as the starting model.
+10/28/2022 12:10 am. Finished training with max winrate = 16%. It's model is now the new terran_latest.3
+
+
+
 
