@@ -50,13 +50,13 @@ flags.DEFINE_integer("minimap_resolution", 64, "Resolution for minimap feature l
 flags.DEFINE_integer("step_mul", 1, "Game steps per agent step.")
 
 flags.DEFINE_enum("agent_race", "P", sc2_env.races.keys(), "Agent's race.")
-# flags.DEFINE_enum("bot_race", "T", sc2_env.races.keys(), "Bot's race.")
-flags.DEFINE_enum("bot_race", "Z", sc2_env.races.keys(), "Bot's race.")
+flags.DEFINE_enum("bot_race", "T", sc2_env.races.keys(), "Bot's race.")
+# flags.DEFINE_enum("bot_race", "Z", sc2_env.races.keys(), "Bot's race.")
 # flags.DEFINE_enum("bot_race", "P", sc2_env.races.keys(), "Bot's race.")
 # flags.DEFINE_enum("difficulty", "A", sc2_env.difficulties.keys(), "Bot's strength.")
 flags.DEFINE_enum("difficulty", "3", sc2_env.difficulties.keys(), "Bot's strength.")
 flags.DEFINE_integer("max_agent_steps", 18000, "Total agent steps.")
-flags.DEFINE_integer("max_iters", 10, "the rl agent max run iters")
+flags.DEFINE_integer("max_iters", 5, "the rl agent max run iters")
 
 flags.DEFINE_bool("profile", False, "Whether to turn on code profiling.")
 flags.DEFINE_bool("trace", False, "Whether to trace the code execution.")
@@ -65,12 +65,12 @@ flags.DEFINE_string("replay_dir", "multi-agent/", "dir of replay to replays_save
 
 # flags.DEFINE_string("restore_model_path", "./model/20211130-131356/", "path for restore model")
 # flags.DEFINE_string("restore_model_path", "./model/lv10-0.94/", "path for restore model")
-flags.DEFINE_string("restore_model_path", "./model/zerg_latest.3/", "path for restore model")
-# flags.DEFINE_string("restore_model_path", "./model/terran_latest.3/", "path for restore model")
+# flags.DEFINE_string("restore_model_path", "./model/zerg_latest.3/", "path for restore model")
+flags.DEFINE_string("restore_model_path", "./model/terran_latest.3/", "path for restore model")
 flags.DEFINE_bool("restore_model", True, "Whether to restore old model")
 # flags.DEFINE_bool("restore_model", True, "Whether to restore old model")
 
-flags.DEFINE_integer("parallel", 1, "How many processes to run in parallel.")
+flags.DEFINE_integer("parallel", 2, "How many processes to run in parallel.")
 # flags.DEFINE_integer("parallel", 1, "How many processes to run in parallel.")
 flags.DEFINE_integer("thread_num", 2, "How many thread to run in the process.")
 # flags.DEFINE_integer("thread_num", 1, "How many thread to run in the process.")
