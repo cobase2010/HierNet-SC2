@@ -76,7 +76,18 @@ epoc 2 game 1 @11428s 1.47 hours win rate = 29.5
 epoc 3 win rate = 
 Best win rate = 30%
 
-Run 4: 
+Run 4: 35%
+4 proc, 2 threads, 7 iterations
+epoc 0: win rate = 35%
+Finished in 10 hours with 35% winrate
+
+Run 5: 
+
+
+
+
+
+
 
 
 
