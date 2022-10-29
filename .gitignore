@@ -129,3 +129,5 @@ dmypy.json
 
 result.txt
 .DS_Store
+tmp/HierNet-SC2
+tmp/HierNet-SC2

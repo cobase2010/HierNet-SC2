@@ -9,8 +9,10 @@ rm -fr ../model/terran_latest.3.prev
 mv ../model/terran_latest.3 ../model/terran_latest.3.prev
 cp sc2-tweaking.log ../kaggle_log
 cp HierNet-SC2/results.log ../kaggle_log
-mv HierNet-SC2/model/20221028-203245 ../model/terran_latest.3
+# mv HierNet-SC2/model/20221028-203245 ../model/terran_latest.3
+rm -fr "HierNet-SC2/model/20221028-062159"
+mv HierNet-SC2/model/202* ../model/terran_latest.3
 cd ..
-# rm -fr tmp
+rm -fr tmp
 
 echo "Done processing."
