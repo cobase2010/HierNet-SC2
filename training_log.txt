@@ -37,11 +37,10 @@ Besg win rate: 45%
 
 Started another run at 10/28/2022 6:22 am
 10 iterations of 200 games with 1 proc, 2 threads on surface book 2
+somehow cancelled after 7 iterations. best win rate: 44%
 
-
-
-
-
+Started another run at 10/28/2022 7:30 PM
+10 iterations of 200 games with 1 proc, 2 threads on surface book 2
 
 
 On macbook
@@ -58,15 +57,32 @@ epoch 1:
 102622-20:15: started a new run with 200 episodes for 20 iterations: running 1 proc, 2 threads.
 Using proto_latest.3 as starting model.
 
+On Kaggle:
 
 Protos vs Terran
 Started a run with 5 iterations of 200 games on Kaggle server at 10/27/2022 11:00 am
 A previous run was killed after 12 hours.
+Run 1: 16%
 Using terran_latest.3 as the starting model.
 10/28/2022 12:10 am. Finished training with max winrate = 16%. It's model is now the new terran_latest.3
+Run 2: 25%
 10/28/2022 12:20 PM  Finished training with max winrate = 25%. It's model is now the new terran_latest.3. switch to 1 proc, 2 threads
+Run 3: 30%
 Swithching to CPU (as I ran out of GPU quota) and back to 2 proc, 2 thread.
-10/28/2022 12:
+10/28/2022 1:40PM Started a new run with CPU (4 core) only. 4 proc, 2 threads. Using command line parameters. (had to restart due to typo)
+epoc 0 game 1 started @836s win rate = 27%
+epoc 1 game 1 started @6126s about 90 minutes for each iter. win rate = 29%
+epoc 2 game 1 @11428s 1.47 hours win rate = 29.5
+epoc 3 win rate = 
+Best win rate = 30%
+
+Run 4: 
+
+
+
+
+
+
 
 
 
