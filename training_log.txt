@@ -81,7 +81,7 @@ Run 4: 35%
 epoc 0: win rate = 35%
 Finished in 10 hours with 35% winrate
 
-Run 5: 
+Run 5: 41%
 
 
 
