@@ -82,6 +82,12 @@ epoc 0: win rate = 35%
 Finished in 10 hours with 35% winrate
 
 Run 5: 41%
+4 proc, 2 threads, 7 iterations
+
+Run 6: 44.5%
+4 proc, 2 threads, 10 iterations (killed after 9 iterations)
+
+
 
 
 
